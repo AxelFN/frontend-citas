@@ -47,7 +47,7 @@ function cerrarSesion() {
 }
 
 function cargarCitas() {
-  fetch("http://localhost:3000/api/citas/todas", {
+  fetch("https://backend-citas-4ye2.onrender.com/api/citas/todas", {
     headers: {
       Authorization: "Bearer " + token
     }
@@ -92,7 +92,7 @@ function cargarCitas() {
 }
 
 function cambiarEstado(id, nuevoEstado) {
-  fetch(`http://localhost:3000/api/citas/${id}`, {
+  fetch(`https://backend-citas-4ye2.onrender.com/api/citas/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
