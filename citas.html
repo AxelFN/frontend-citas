@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mis Citas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Mis Citas</a>
+    <button class="btn btn-outline-light" onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Citas Agendadas</h5>
+      <div class="table-responsive">
+        <table class="table table-hover mt-3">
+          <thead class="table-light">
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Especialidad</th>
+              <th>Unidad Médica</th>
+              <th>Médico</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-citas">
+            <tr><td colspan="7" class="text-center">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function cerrarSesion() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('usuario');
+  window.location.href = 'login.html';
+}
+
+function cargarCitas() {
+  const token = localStorage.getItem('token');
+  if (!token) return window.location.href = 'login.html';
+
+  fetch('http://localhost:3000/api/citas/mias', {
+    headers: { Authorization: 'Bearer ' + token }
+  })
+    .then(res => res.json())
+    .then(data => {
+      const tabla = document.getElementById('tabla-citas');
+      tabla.innerHTML = '';
+
+      if (data.length === 0) {
+        tabla.innerHTML = '<tr><td colspan="7" class="text-center">No tienes citas agendadas</td></tr>';
+        return;
+      }
+
+      data.forEach(cita => {
+        const fecha = new Date(cita.fecha).toLocaleDateString();
+        tabla.innerHTML += `
+          <tr>
+            <td>${fecha}</td>
+            <td>${cita.hora}</td>
+            <td>${cita.especialidad?.nombre || '-'}</td>
+            <td>${cita.unidad_medica?.nombre || '-'}</td>
+            <td>${cita.medico?.nombre || '-'}</td>
+            <td>${cita.estatus}</td>
+            <td>
+              <button class="btn btn-sm btn-danger" onclick="cancelarCita('${cita._id}')">Cancelar</button>
+            </td>
+          </tr>
+        `;
+      });
+    })
+    .catch(err => {
+      console.error('Error al cargar citas:', err);
+      alert('Error al obtener las citas');
+    });
+}
+
+function cancelarCita(id) {
+  const token = localStorage.getItem('token');
+  if (!token) return window.location.href = 'login.html';
+
+  if (!confirm('¿Seguro que deseas cancelar esta cita?')) return;
+
+  fetch(`http://localhost:3000/api/citas/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: 'Bearer ' + token }
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.mensaje);
+      cargarCitas();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', cargarCitas);
+</script>
+
+</body>
+</html>
