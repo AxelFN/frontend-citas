@@ -47,7 +47,7 @@ document.getElementById("form-unidad").addEventListener("submit", function (e) {
     ubicacion: document.getElementById("ubicacion").value
   };
 
-  fetch("http://localhost:3000/api/unidades", {
+  fetch("https://backend-citas-4ye2.onrender.com/api/unidades", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -69,3 +69,4 @@ document.getElementById("form-unidad").addEventListener("submit", function (e) {
 
 </body>
 </html>
+
