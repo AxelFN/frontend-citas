@@ -42,7 +42,7 @@ document.getElementById("form-especialidad").addEventListener("submit", function
 
   const nombre = document.getElementById("nombre").value;
 
-  fetch("http://localhost:3000/api/especialidades", {
+  fetch("https://backend-citas-4ye2.onrender.com/api/especialidades", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -64,3 +64,4 @@ document.getElementById("form-especialidad").addEventListener("submit", function
 
 </body>
 </html>
+
