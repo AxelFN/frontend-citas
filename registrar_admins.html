@@ -67,7 +67,7 @@ document.getElementById("form-admin").addEventListener("submit", function(e) {
     rol: document.getElementById("rol").value
   };
 
-  fetch("http://localhost:3000/api/admins", {
+  fetch("https://backend-citas-4ye2.onrender.com/api/admins", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -88,3 +88,4 @@ document.getElementById("form-admin").addEventListener("submit", function(e) {
 </script>
 </body>
 </html>
+
