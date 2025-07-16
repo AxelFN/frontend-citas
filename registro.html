@@ -61,7 +61,7 @@ document.getElementById('form-registro').addEventListener('submit', async functi
   };
 
   try {
-    const res = await fetch('http://localhost:3000/api/usuarios/registro', {
+    const res = await fetch('https://backend-citas-4ye2.onrender.com/api/usuarios/registro', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
