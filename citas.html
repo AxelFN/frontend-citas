@@ -51,7 +51,7 @@ function cargarCitas() {
   const token = localStorage.getItem('token');
   if (!token) return window.location.href = 'login.html';
 
-  fetch('http://localhost:3000/api/citas/mias', {
+  fetch('https://backend-citas-4ye2.onrender.com/api/citas/mias', {
     headers: { Authorization: 'Bearer ' + token }
   })
     .then(res => res.json())
@@ -93,7 +93,7 @@ function cancelarCita(id) {
 
   if (!confirm('¿Seguro que deseas cancelar esta cita?')) return;
 
-  fetch(`http://localhost:3000/api/citas/${id}`, {
+  fetch(`https://backend-citas-4ye2.onrender.com/api/citas/${id}`, {
     method: 'DELETE',
     headers: { Authorization: 'Bearer ' + token }
   })
@@ -109,3 +109,4 @@ document.addEventListener('DOMContentLoaded', cargarCitas);
 
 </body>
 </html>
+
