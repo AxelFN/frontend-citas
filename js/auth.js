@@ -4,7 +4,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
 
-  const res = await fetch('http://localhost:5000/api/auth/login', {
+  const res = await fetch("https://backend-citas-4ye2.onrender.com/api/auth/login", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password })
@@ -28,7 +28,7 @@ if (registerForm) {
     const password = document.getElementById('password').value;
     const rol = document.getElementById('rol').value;
 
-    const res = await fetch('http://localhost:5000/api/auth/register', {
+    const res = await fetch("https://backend-citas-4ye2.onrender.com/api/auth/register", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nombre, email, password, rol })
