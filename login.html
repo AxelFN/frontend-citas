@@ -37,39 +37,6 @@
     </div>
   </div>
 </div>
-
 <script src="js/scripts.js"></script>
-<script>
-document.getElementById('form-login').addEventListener('submit', async function (e) {
-  e.preventDefault();
-  const email = document.getElementById('email').value;
-  const contrasena = document.getElementById('contrasena').value;
-
-  try {
-    const res = await fetch('https://backend-citas-4ye2.onrender.com/api/usuarios/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, contrasena })
-    });
-
-    const data = await res.json();
-    if (!res.ok) return alert(data.mensaje || 'Error de inicio de sesión');
-
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('usuario', JSON.stringify(data.usuario));
-
-    if (data.usuario.rol === 'admin') {
-      window.location.href = 'dashboard.html';
-    } else {
-      window.location.href = 'agendar.html';
-    }
-
-  } catch (err) {
-    console.error('Error:', err);
-    alert('Error de servidor');
-  }
-});
-</script>
-
 </body>
 </html>
