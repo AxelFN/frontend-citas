@@ -80,6 +80,19 @@ function cargarDatos() {
     .catch(error => console.error("Error al cargar médicos:", error));
 }
 
+// Limita el input de fecha entre hoy y 30 días después
+function limitarFecha() {
+  const fechaInput = document.getElementById("fecha");
+  const ahora = new Date();
+  const maxFecha = new Date(ahora);
+  maxFecha.setDate(maxFecha.getDate() + 30);
+
+  const formato = (fecha) => fecha.toISOString().slice(0, 16);
+
+  fechaInput.min = formato(ahora);
+  fechaInput.max = formato(maxFecha);
+}
+
 document.getElementById("medico").addEventListener("change", function () {
   const medicoId = this.value;
   const medico = listaMedicos.find(m => m._id === medicoId);
@@ -91,6 +104,16 @@ document.getElementById("medico").addEventListener("change", function () {
 document.getElementById("form-cita").addEventListener("submit", function (e) {
   e.preventDefault();
   const token = localStorage.getItem("token");
+
+  const fechaSeleccionada = new Date(document.getElementById("fecha").value);
+  const ahora = new Date();
+  const maxFecha = new Date();
+  maxFecha.setDate(ahora.getDate() + 30);
+
+  // Validar rango de fecha antes de agendar
+  if (fechaSeleccionada < ahora || fechaSeleccionada > maxFecha) {
+    return alert("La fecha seleccionada no es válida. Debe estar dentro de los próximos 30 días.");
+  }
 
   const medicoId = document.getElementById("medico").value;
   const medicoSeleccionado = listaMedicos.find(m => m._id === medicoId);
@@ -125,25 +148,13 @@ document.getElementById("form-cita").addEventListener("submit", function (e) {
     });
 });
 
-document.addEventListener("DOMContentLoaded", cargarDatos);
-  function limitarFecha() {
-  const fechaInput = document.getElementById("fecha");
-
-  const ahora = new Date();
-  const maxFecha = new Date(ahora);
-  maxFecha.setDate(maxFecha.getDate() + 30); // máximo 30 días al futuro
-
-  // Convertir a formato 'YYYY-MM-DDTHH:mm'
-  const formato = (fecha) =>
-    fecha.toISOString().slice(0, 16); // datetime-local usa este formato
-
-  fechaInput.min = formato(ahora);
-  fechaInput.max = formato(maxFecha);
-}
-
-limitarFecha();
-
+// Ejecutar funciones al cargar la página
+document.addEventListener("DOMContentLoaded", function () {
+  cargarDatos();
+  limitarFecha();
+});
 </script>
+
 
 </body>
 </html>
