@@ -68,7 +68,7 @@ document.getElementById('form-registro').addEventListener('submit', async functi
 
   // Validar rango de fecha de nacimiento
   const anioNacimiento = new Date(data.fecha_nacimiento).getFullYear();
-  if (anioNacimiento < 1900 || anioNacimiento > anioActual) {
+  if (anioNacimiento < 1950 || anioNacimiento > anioActual) {
     return alert('La fecha de nacimiento no es válida. Debe estar entre 1900 y el año actual.');
   }
 
