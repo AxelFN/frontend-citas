@@ -50,6 +50,11 @@
 </div>
 
 <script>
+const fechaNacimientoInput = document.getElementById('fecha_nacimiento');
+const hoy = new Date();
+const anioActual = hoy.getFullYear();
+fechaNacimientoInput.max = `${anioActual}-12-31`;
+
 document.getElementById('form-registro').addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -60,6 +65,12 @@ document.getElementById('form-registro').addEventListener('submit', async functi
     telefono: document.getElementById('telefono').value,
     contrasena: document.getElementById('contrasena').value
   };
+
+  // Validar rango de fecha de nacimiento
+  const anioNacimiento = new Date(data.fecha_nacimiento).getFullYear();
+  if (anioNacimiento < 1900 || anioNacimiento > anioActual) {
+    return alert('La fecha de nacimiento no es válida. Debe estar entre 1900 y el año actual.');
+  }
 
   try {
     const res = await fetch('https://backend-citas-4ye2.onrender.com/api/usuarios/registro', {
@@ -80,5 +91,6 @@ document.getElementById('form-registro').addEventListener('submit', async functi
   }
 });
 </script>
+
 </body>
 </html>
