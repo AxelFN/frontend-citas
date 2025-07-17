@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } catch (error) {
         console.error("Error al iniciar sesión:", error);
-        alert("NEL");
+        alert("NEL Pastel");
       }
     });
   }
