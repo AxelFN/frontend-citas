@@ -41,8 +41,19 @@
  <script>
 document.getElementById('form-login').addEventListener('submit', async function (e) {
   e.preventDefault();
+
   const email = document.getElementById('email').value;
   const contrasena = document.getElementById('contrasena').value;
+
+  // Verificar bloqueo
+  const intentos = parseInt(localStorage.getItem('intentosFallidos')) || 0;
+  const bloqueoHasta = parseInt(localStorage.getItem('bloqueoHasta')) || 0;
+  const ahora = Date.now();
+
+  if (bloqueoHasta && ahora < bloqueoHasta) {
+    const segundosRestantes = Math.ceil((bloqueoHasta - ahora) / 1000);
+    return alert(`Demasiados intentos fallidos. Intenta de nuevo en ${segundosRestantes} segundos.`);
+  }
 
   try {
     const res = await fetch('https://backend-citas-4ye2.onrender.com/api/usuarios/login', {
@@ -52,7 +63,25 @@ document.getElementById('form-login').addEventListener('submit', async function 
     });
 
     const data = await res.json();
-    if (!res.ok) return alert(data.mensaje || 'Error de inicio de sesión');
+
+    if (!res.ok) {
+      // Manejo de intentos fallidos
+      const nuevosIntentos = intentos + 1;
+      localStorage.setItem('intentosFallidos', nuevosIntentos);
+
+      if (nuevosIntentos >= 3) {
+        const tiempoBloqueo = Date.now() + 60 * 1000; // 1 minuto
+        localStorage.setItem('bloqueoHasta', tiempoBloqueo);
+        localStorage.setItem('intentosFallidos', 0); // reiniciar contador
+        return alert('Has superado el número de intentos. Bloqueado por 1 minuto.');
+      }
+
+      return alert(data.mensaje || 'Error de inicio de sesión');
+    }
+
+    // Si el login es exitoso, limpiar los intentos fallidos
+    localStorage.removeItem('intentosFallidos');
+    localStorage.removeItem('bloqueoHasta');
 
     localStorage.setItem('token', data.token);
     localStorage.setItem('usuario', JSON.stringify(data.usuario));
@@ -68,6 +97,7 @@ document.getElementById('form-login').addEventListener('submit', async function 
     alert('Error de servidor');
   }
 });
+
 </script>
 </body>
 </html>
