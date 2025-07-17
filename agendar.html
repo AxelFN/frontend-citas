@@ -118,33 +118,49 @@ document.getElementById("form-cita").addEventListener("submit", function (e) {
   const medicoId = document.getElementById("medico").value;
   const medicoSeleccionado = listaMedicos.find(m => m._id === medicoId);
 
-  const datos = {
-    medico: medicoId,
-    especialidad: medicoSeleccionado?.especialidad?._id,
-    unidad_medica: medicoSeleccionado?.unidad_medica?._id,
-    fecha: document.getElementById("fecha").value,
-    hora: new Date(document.getElementById("fecha").value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    servicio: "Consulta general"
-  };
-
-  fetch('https://backend-citas-4ye2.onrender.com/api/citas', {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + token
-    },
-    body: JSON.stringify(datos)
+  // ✅ VERIFICAR SI YA EXISTE UNA CITA EN LA MISMA FECHA Y HORA
+  const fechaISO = document.getElementById("fecha").value;
+  fetch(`https://backend-citas-4ye2.onrender.com/api/citas/medico/${medicoId}/fecha/${encodeURIComponent(fechaISO)}`, {
+    headers: { Authorization: "Bearer " + token }
   })
     .then(res => res.json())
-    .then(data => {
-      alert(data.mensaje);
-      document.getElementById("form-cita").reset();
-      document.getElementById("especialidad").value = '';
-      document.getElementById("unidad_medica").value = '';
+    .then(respuesta => {
+      if (respuesta.existe) {
+        return alert("Ya existe una cita registrada con este médico en esa fecha y hora. Por favor elige otra.");
+      }
+
+      const datos = {
+        medico: medicoId,
+        especialidad: medicoSeleccionado?.especialidad?._id,
+        unidad_medica: medicoSeleccionado?.unidad_medica?._id,
+        fecha: fechaISO,
+        hora: new Date(fechaISO).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        servicio: "Consulta general"
+      };
+
+      fetch('https://backend-citas-4ye2.onrender.com/api/citas', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify(datos)
+      })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.mensaje);
+          document.getElementById("form-cita").reset();
+          document.getElementById("especialidad").value = '';
+          document.getElementById("unidad_medica").value = '';
+        })
+        .catch(error => {
+          console.error("Error al agendar cita:", error);
+          alert("Error al agendar cita");
+        });
     })
     .catch(error => {
-      console.error("Error al agendar cita:", error);
-      alert("Error al agendar cita");
+      console.error("Error al verificar cita:", error);
+      alert("Error al verificar la disponibilidad.");
     });
 });
 
@@ -154,7 +170,6 @@ document.addEventListener("DOMContentLoaded", function () {
   limitarFecha();
 });
 </script>
-
 
 </body>
 </html>
