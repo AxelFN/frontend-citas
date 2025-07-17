@@ -1,6 +1,6 @@
 const URL = "https://backend-citas-4ye2.onrender.com";
 
-// Esperar a que cargue el DOM
+// Espera a que cargue el DOM
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("form-login");
 
@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const email = document.getElementById("email").value;
-      const contrasena = document.getElementById("contrasena").value;
+      const email = document.getElementById("email").value.trim();
+      const contrasena = document.getElementById("contrasena").value.trim();
 
       try {
         const res = await fetch(`${URL}/api/login`, {
@@ -36,8 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } catch (error) {
         console.error("Error al iniciar sesión:", error);
-        alert("NEL Pastel");
+        alert("Error del servidor. Intenta más tarde.");
       }
     });
   }
 });
+
