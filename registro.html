@@ -58,19 +58,22 @@ fechaNacimientoInput.max = `${anioActual}-12-31`;
 document.getElementById('form-registro').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const data = {
-    nombre: document.getElementById('nombre').value,
-    fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
-    email: document.getElementById('email').value,
-    telefono: document.getElementById('telefono').value,
-    contrasena: document.getElementById('contrasena').value
-  };
+  const nombre = document.getElementById('nombre').value;
+  const fecha_nacimiento = document.getElementById('fecha_nacimiento').value;
+  const email = document.getElementById('email').value;
+  const telefono = document.getElementById('telefono').value;
+  const contrasena = document.getElementById('contrasena').value;
 
-  // Validar rango de fecha de nacimiento
-const anioNacimiento = new Date(data.fecha_nacimiento).getFullYear();
-if (anioNacimiento < 1900 || anioNacimiento > anioActual) {
-  return alert('La fecha de nacimiento no es válida. Debe estar entre 1900 y el año actual.');
-}
+  const anioNacimiento = new Date(fecha_nacimiento).getFullYear();
+  if (anioNacimiento < 1900 || anioNacimiento > anioActual) {
+    return alert('La fecha de nacimiento no es válida. Debe estar entre 1900 y el año actual.');
+  }
+
+  if (contrasena.length < 10) {
+    return alert('La contraseña debe tener al menos 10 caracteres.');
+  }
+
+  const data = { nombre, fecha_nacimiento, email, telefono, contrasena };
 
   try {
     const res = await fetch('https://backend-citas-4ye2.onrender.com/api/usuarios/registro', {
@@ -94,3 +97,4 @@ if (anioNacimiento < 1900 || anioNacimiento > anioActual) {
 
 </body>
 </html>
+
