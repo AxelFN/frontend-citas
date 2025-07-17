@@ -126,6 +126,23 @@ document.getElementById("form-cita").addEventListener("submit", function (e) {
 });
 
 document.addEventListener("DOMContentLoaded", cargarDatos);
+  function limitarFecha() {
+  const fechaInput = document.getElementById("fecha");
+
+  const ahora = new Date();
+  const maxFecha = new Date(ahora);
+  maxFecha.setDate(maxFecha.getDate() + 30); // máximo 30 días al futuro
+
+  // Convertir a formato 'YYYY-MM-DDTHH:mm'
+  const formato = (fecha) =>
+    fecha.toISOString().slice(0, 16); // datetime-local usa este formato
+
+  fechaInput.min = formato(ahora);
+  fechaInput.max = formato(maxFecha);
+}
+
+limitarFecha();
+
 </script>
 
 </body>
